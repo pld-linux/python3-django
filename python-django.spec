@@ -41,6 +41,8 @@ find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 # %%py_postclean
 
+echo 'Django-%{version}-py%{py_ver}.egg' > $RPM_BUILD_ROOT%{py_sitescriptdir}/Django.pth
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
