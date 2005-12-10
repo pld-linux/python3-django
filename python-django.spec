@@ -33,9 +33,13 @@ python ./setup.py install \
 	--optimize 2 \
 	--root=$RPM_BUILD_ROOT
 
+find $RPM_BUILD_ROOT -type f -name '*.pyc' -exec rm "{}" ";"
+find $RPM_BUILD_ROOT -type f -name '*.pyo' -exec rm "{}" ";"
+find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
+
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py_postclean
+# %%py_postclean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
