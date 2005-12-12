@@ -1,14 +1,14 @@
-
-%define	module	Django
+%define		module	Django
 
 Summary:	The web framework for perfectionists with deadlines
 Name:		python-django
 Version:	0.90
-Release:	1
+Release:	2
 License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/0.90/Django-%{version}.tar.gz
 # Source0-md5:	16e1a377e58c25e8b36df49fb7d9d122
+Patch0:		%{name}-autoreload.patch
 URL:		http://www.djangoproject.com/
 %pyrequires_eq	python
 BuildRequires:	python-devel
@@ -21,7 +21,9 @@ Django is a high-level Python Web framework that encourages rapid
 development and clean, pragmatic design.
 
 %prep
-%setup  -q -n %{module}-%{version}
+%setup -q -n %{module}-%{version}
+
+%patch0 -p1
 
 %build
 python ./setup.py build
