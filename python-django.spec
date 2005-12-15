@@ -1,6 +1,7 @@
 %define		module	Django
 
 Summary:	The web framework for perfectionists with deadlines
+Summary(pl):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
 Version:	0.90
 Release:	2
@@ -19,6 +20,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Django is a high-level Python Web framework that encourages rapid
 development and clean, pragmatic design.
+
+%description -l pl
+Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
+wspieraj±cy szybkie tworzenie i czysty, pragmatyczny projekt.
 
 %prep
 %setup -q -n %{module}-%{version}
