@@ -37,6 +37,7 @@ python ./setup.py build
 rm -rf $RPM_BUILD_ROOT
 
 python ./setup.py install \
+	--single-version-externally-managed \
 	--optimize 2 \
 	--root=$RPM_BUILD_ROOT
 
@@ -48,8 +49,6 @@ find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 # %%py_postclean
 
-echo 'Django-%{version}-py%{py_ver}.egg' > $RPM_BUILD_ROOT%{py_sitescriptdir}/Django.pth
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -58,3 +57,4 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/*.* README
 %attr(755,root,root) %{_bindir}/*
 %{py_sitescriptdir}/%{module}*
+%{py_sitescriptdir}/django
