@@ -4,7 +4,7 @@ Summary:	The web framework for perfectionists with deadlines
 Summary(pl):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
 Version:	0.90
-Release:	2
+Release:	3
 License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/0.90/Django-%{version}.tar.gz
