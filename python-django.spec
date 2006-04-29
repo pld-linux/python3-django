@@ -3,13 +3,12 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
-Version:	0.90
+Version:	0.91
 Release:	3
 License:	BSD
 Group:		Development/Languages/Python
-Source0:	http://media.djangoproject.com/releases/0.90/Django-%{version}.tar.gz
-# Source0-md5:	16e1a377e58c25e8b36df49fb7d9d122
-Patch0:		%{name}-autoreload.patch
+Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}.tar.gz
+# Source0-md5:	b1f13aa828c0a564581043658c66ae3d
 URL:		http://www.djangoproject.com/
 %pyrequires_eq	python
 BuildRequires:	python-devel
@@ -28,7 +27,6 @@ wspieraj±cy szybkie tworzenie i czysty, pragmatyczny projekt.
 %prep
 %setup -q -n %{module}-%{version}
 
-%patch0 -p1
 
 %build
 python ./setup.py build
