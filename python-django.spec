@@ -4,7 +4,7 @@ Summary:	The web framework for perfectionists with deadlines
 Summary(pl):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
 Version:	0.91
-Release:	0.1
+Release:	0.2
 License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}.tar.gz
@@ -46,6 +46,7 @@ find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 # %%py_postclean
+find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -exec rm "{}" ";"
 
 %clean
 rm -rf $RPM_BUILD_ROOT
