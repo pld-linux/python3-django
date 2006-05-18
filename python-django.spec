@@ -10,9 +10,9 @@ Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}.tar.gz
 # Source0-md5:	b1f13aa828c0a564581043658c66ae3d
 URL:		http://www.djangoproject.com/
-%pyrequires_eq	python
 BuildRequires:	python-devel
-BuildRequires:	unzip
+BuildRequires:	rpm-pythonprov
+%pyrequires_eq	python
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -26,7 +26,6 @@ wspieraj±cy szybkie tworzenie i czysty, pragmatyczny projekt.
 
 %prep
 %setup -q -n %{module}-%{version}
-
 
 %build
 python ./setup.py build
