@@ -3,14 +3,15 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
-Version:	0.91
-Release:	0.2
+Version:	0.95
+Release:	0.3
 License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}.tar.gz
-# Source0-md5:	b1f13aa828c0a564581043658c66ae3d
+# Source0-md5:	9ed7d6a0daa147c012e31d0894802951
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel
+BuildRequires:	python-setuptools >= 0.6-0.c1
 BuildRequires:	rpm-pythonprov
 %pyrequires_eq	python
 BuildArch:	noarch
@@ -45,7 +46,8 @@ find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 # %%py_postclean
-find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -exec rm "{}" ";"
+find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -a -not -path '*_template*' -exec rm "{}" ";"
+find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' -exec rm "{}" ";"
 
 %clean
 rm -rf $RPM_BUILD_ROOT
