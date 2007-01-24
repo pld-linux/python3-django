@@ -9,7 +9,7 @@ License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/0.95/Django-%{version}.tar.gz
 # Source0-md5:	07f09d8429916481e09e84fd01e97355
-Patch0:     %{name}-urlfield-size.patch
+Patch0:		%{name}-urlfield-size.patch
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools >= 0.6-0.c1
