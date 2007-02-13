@@ -1,7 +1,7 @@
 %define		module	Django
 
 Summary:	The web framework for perfectionists with deadlines
-Summary(pl.UTF-8):   Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
+Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
 Version:	0.95.1
 Release:	2
