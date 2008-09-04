@@ -1,0 +1,13 @@
+--- Django-1.0/django/core/management/__init__.py~	2008-09-04 16:59:20.000000000 +0200
++++ Django-1.0/django/core/management/__init__.py	2008-09-04 17:03:06.523177611 +0200
+@@ -22,8 +22,8 @@
+     """
+     command_dir = os.path.join(management_dir, 'commands')
+     try:
+-        return [f[:-3] for f in os.listdir(command_dir)
+-                if not f.startswith('_') and f.endswith('.py')]
++        return [f[:-4] for f in os.listdir(command_dir)
++                if not f.startswith('_') and f.endswith('.pyc')]
+     except OSError:
+         return []
+ 
