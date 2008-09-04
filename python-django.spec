@@ -7,8 +7,7 @@ Version:	1.0
 Release:	1
 License:	BSD
 Group:		Development/Languages/Python
-# Source has an ugly URI: http://www.djangoproject.com/download/1.0/tarball/
-Source0:	Django-%{version}.tar.gz
+Source0:	http://media.djangoproject.com/releases/1.0/Django-%{version}.tar.gz
 # Source0-md5:	84d0490e4126f31d1c23f640e1e86f2f
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel
