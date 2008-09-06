@@ -7,7 +7,7 @@
 -        return [f[:-3] for f in os.listdir(command_dir)
 -                if not f.startswith('_') and f.endswith('.py')]
 +        return [f[:-4] for f in os.listdir(command_dir)
-+                if not f.startswith('_') and f.endswith('.pyc')]
++                if not f.startswith('_') and (f.endswith('.pyc') or f.endswith('.py'))]
      except OSError:
          return []
  
