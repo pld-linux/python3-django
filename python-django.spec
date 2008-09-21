@@ -15,6 +15,8 @@ BuildRequires:	python-devel
 BuildRequires:	python-setuptools >= 0.6-0.c1
 BuildRequires:	rpm-pythonprov
 %pyrequires_eq	python
+Suggests:	python-MySQLdb
+Suggests:	python-PyGreSQL
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
