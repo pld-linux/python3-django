@@ -3,12 +3,12 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-django
-Version:	1.0
-Release:	5
+Version:	1.0.1
+Release:	1
 License:	BSD
 Group:		Development/Languages/Python
-Source0:	http://media.djangoproject.com/releases/1.0/Django-%{version}.tar.gz
-# Source0-md5:	84d0490e4126f31d1c23f640e1e86f2f
+Source0:	http://media.djangoproject.com/releases/1.0.1/Django-%{version}-final.tar.gz
+# Source0-md5:	441efb2f6609ac8f4fab651d4eb0c091
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel
@@ -29,7 +29,7 @@ Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
 wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
 
 %prep
-%setup -q -n %{module}-%{version}
+%setup -q -n %{module}-%{version}-final
 %patch0 -p1
 
 %build
