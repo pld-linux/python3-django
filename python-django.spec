@@ -60,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/*.* README
 %attr(755,root,root) %{_bindir}/*
 %{py_sitescriptdir}/%{module}*
-%{py_sitescriptdir}/Django-*.egg-info
+## %{py_sitescriptdir}/Django-*.egg-info
