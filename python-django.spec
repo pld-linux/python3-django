@@ -1,13 +1,13 @@
-%define		module	Django
+%define		module	django
 
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
-Name:		python-django
+Name:		python-%{module}
 Version:	1.0.2
-Release:	1
+Release:	2
 License:	BSD
 Group:		Development/Languages/Python
-Source0:	http://media.djangoproject.com/releases/1.0.2/Django-%{version}-final.tar.gz
+Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}-final.tar.gz
 # Source0-md5:	89353e3749668778f1370d2e444f3adc
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
@@ -29,7 +29,7 @@ Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
 wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
 
 %prep
-%setup -q -n %{module}-%{version}-final
+%setup -q -n Django-%{version}-final
 %patch0 -p1
 
 %build
@@ -60,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/*.* README
 %attr(755,root,root) %{_bindir}/*
 %{py_sitescriptdir}/%{module}*
-%{py_sitescriptdir}/django
+%{py_sitescriptdir}/Django-*.egg-info
