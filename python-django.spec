@@ -1,14 +1,16 @@
-%define		module	django
+%define		module		django
+%define		state		beta
+%define		statever	1
 
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.0.2
-Release:	3
+Version:	1.1
+Release:	0.%{state}%{statever}.1
 License:	BSD
 Group:		Development/Languages/Python
-Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}-final.tar.gz
-# Source0-md5:	89353e3749668778f1370d2e444f3adc
+Source0:	http://media.djangoproject.com/releases/%{version}/Django-%{version}-%{state}-%{statever}.tar.gz
+# Source0-md5:	0a95c73ea5d46a75d1592984ad197dbd
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel
@@ -29,7 +31,7 @@ Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
 wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
 
 %prep
-%setup -q -n Django-%{version}-final
+%setup -q -n Django-%{version}-%{state}-%{statever}
 %patch0 -p1
 
 %build
