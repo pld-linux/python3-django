@@ -3,12 +3,12 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.2.1
+Version:	1.2.3
 Release:	1
 License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://media.djangoproject.com/releases/1.2/Django-%{version}.tar.gz
-# Source0-md5:	2351efb20f6b7b5d9ce80fa4cb1bd9ca
+# Source0-md5:	10bfb5831bcb4d3b1e6298d0e41d6603
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel
