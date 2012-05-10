@@ -11,7 +11,6 @@ Source0:	http://www.djangoproject.com/m/releases/1.4/Django-%{version}.tar.gz
 # Source0-md5:	ba8e86198a93c196015df0b363ab1109
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
-BuildRequires:	python-Pygments >= 0.8
 BuildRequires:	python-devel >= 2.5
 BuildRequires:	python-setuptools
 BuildRequires:	rpm-pythonprov
