@@ -1,14 +1,13 @@
 %define		module	django
-
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.4
+Version:	1.4.2
 Release:	1
 License:	BSD
 Group:		Development/Languages/Python
 Source0:	http://www.djangoproject.com/m/releases/1.4/Django-%{version}.tar.gz
-# Source0-md5:	ba8e86198a93c196015df0b363ab1109
+# Source0-md5:	6ffecdc01ad360e1abdca1015ae0893a
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
 BuildRequires:	python-devel >= 2.5
@@ -48,27 +47,24 @@ Dokumentacja do Django.
 %patch0 -p1
 
 %build
-python ./setup.py build
-
+%{__python} setup.py build
 %{__make} -C docs html
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_docdir}
-
-python ./setup.py install \
+%{__python} setup.py install \
 	--optimize 2 \
 	--root=$RPM_BUILD_ROOT
 
-find $RPM_BUILD_ROOT -type f -name '*.pyc' -exec rm "{}" ";"
-find $RPM_BUILD_ROOT -type f -name '*.pyo' -exec rm "{}" ";"
+find $RPM_BUILD_ROOT -type f -name '*.py[co]' | xargs rm
 find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 # %%py_postclean
-find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -a -not -path '*_template*' -exec rm "{}" ";"
-find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' -exec rm "{}" ";"
+find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -a -not -path '*_template*' | xargs rm
+find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
 
 ln -sf python-django-doc-%{version} $RPM_BUILD_ROOT%{_docdir}/python-django-doc
 rm -rf docs/_build/html/_sources
@@ -79,7 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/django-admin.py
 %{py_sitescriptdir}/%{module}*
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/Django-*.egg-info
