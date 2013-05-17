@@ -1,17 +1,27 @@
+# Conditional build:
+%bcond_without  python2 # CPython 2.x module
+%bcond_without  python3 # CPython 3.x module
+
 %define		module	django
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.4.3
+Version:	1.5.1
 Release:	1
 License:	BSD
 Group:		Libraries/Python
-Source0:	http://www.djangoproject.com/m/releases/1.4/Django-%{version}.tar.gz
-# Source0-md5:	0b134c44b6dc8eb36822677ef506c9ab
+Source0:	http://www.djangoproject.com/m/releases/1.5/Django-%{version}.tar.gz
+# Source0-md5:	7465f6383264ba167a9a031d6b058bff
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
-BuildRequires:	python-devel >= 2.5
+%if %{with python2}
+BuildRequires:	python-devel >= 2.6
 BuildRequires:	python-setuptools
+%endif
+%if %{with python3}
+BuildRequires:	python3-devel >= 3.3
+BuildRequires:	python3-distribute
+%endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sphinx-pdg
 %pyrequires_eq	python
@@ -25,6 +35,22 @@ Django is a high-level Python Web framework that encourages rapid
 development and clean, pragmatic design.
 
 %description -l pl.UTF-8
+Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
+wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
+
+%package -n python3-%{module}
+Summary:	The web framework for perfectionists with deadlines
+Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
+Group:		Libraries/Python
+%pyrequires_eq	python3
+#Suggests:	python3-MySQLdb  # not available yet
+Suggests:	python3-psycopg2
+
+%description -n python3-%{module}
+Django is a high-level Python Web framework that encourages rapid
+development and clean, pragmatic design.
+
+%description -n python3-%{module} -l pl.UTF-8
 Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
 wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
 
@@ -53,18 +79,41 @@ Dokumentacja do Django.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_docdir}
+
+%if %{with python2}
 %{__python} setup.py install \
 	--optimize 2 \
 	--root=$RPM_BUILD_ROOT
+cp $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
+%endif
+
+%if %{with python3}
+%{__python3} setup.py install \
+	--optimize 2 \
+	--root=$RPM_BUILD_ROOT
+cp $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
+%if %{with python2}
+# default to python2 if built
+cp $RPM_BUILD_ROOT%{_bindir}/{py2-django-admin,django-admin.py}
+%endif
+%endif
 
 find $RPM_BUILD_ROOT -type f -name '*.py[co]' | xargs rm
 find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 
+%if %{with python2}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
-# %%py_postclean
+
+# %%py_postclean (only for python2!)
 find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -a -not -path '*_template*' | xargs rm
 find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
+%endif
+
+%if %{with python3}
+%py3_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
+%py3_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
+%endif
 
 ln -sf python-django-doc-%{version} $RPM_BUILD_ROOT%{_docdir}/python-django-doc
 rm -rf docs/_build/html/_sources
@@ -72,13 +121,26 @@ rm -rf docs/_build/html/_sources
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc README
+%doc README.rst
 %attr(755,root,root) %{_bindir}/django-admin.py
+%attr(755,root,root) %{_bindir}/py2-django-admin
 %{py_sitescriptdir}/%{module}*
-%if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/Django-*.egg-info
+%endif
+
+%if %{with python3}
+%files -n python3-%{module}
+%defattr(644,root,root,755)
+%doc README.rst
+%if %{without python2}
+%attr(755,root,root) %{_bindir}/django-admin.py
+%endif
+%attr(755,root,root) %{_bindir}/py3-django-admin
+%{py3_sitescriptdir}/%{module}*
+%{py3_sitescriptdir}/Django-*.egg-info
 %endif
 
 %files doc
