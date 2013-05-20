@@ -15,11 +15,11 @@ Source0:	http://www.djangoproject.com/m/releases/1.5/Django-%{version}.tar.gz
 Patch0:		%{name}-pyc.patch
 URL:		http://www.djangoproject.com/
 %if %{with python2}
-BuildRequires:	python-devel >= 2.6
+BuildRequires:	python-devel >= 1:2.6
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 3.3
+BuildRequires:	python3-devel >= 1:3.3
 BuildRequires:	python3-distribute
 %endif
 BuildRequires:	rpm-pythonprov
