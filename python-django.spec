@@ -26,6 +26,7 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	sphinx-pdg
 %pyrequires_eq	python
 Requires:	python-modules
+Suggests:	python-devel-tools
 Suggests:	python-MySQLdb
 Suggests:	python-PyGreSQL
 BuildArch:	noarch
@@ -45,6 +46,7 @@ Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Group:		Libraries/Python
 %pyrequires_eq	python3
 Requires:	python3-modules
+Suggests:	python3-devel-tools
 #Suggests:	python3-MySQLdb  # not available yet
 Suggests:	python3-psycopg2
 
