@@ -7,7 +7,7 @@ Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
 Version:	1.5.4
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://www.djangoproject.com/m/releases/1.5/Django-%{version}.tar.gz
@@ -25,6 +25,7 @@ BuildRequires:	python3-distribute
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sphinx-pdg
 %pyrequires_eq	python
+Requires:	python-modules
 Suggests:	python-MySQLdb
 Suggests:	python-PyGreSQL
 BuildArch:	noarch
@@ -43,6 +44,7 @@ Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Group:		Libraries/Python
 %pyrequires_eq	python3
+Requires:	python3-modules
 #Suggests:	python3-MySQLdb  # not available yet
 Suggests:	python3-psycopg2
 
