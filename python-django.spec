@@ -6,16 +6,15 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.6.2
-Release:	4
+Version:	1.8.5
+Release:	1
 License:	BSD
 Group:		Libraries/Python
-Source0:	http://www.djangoproject.com/m/releases/1.6/Django-%{version}.tar.gz
-# Source0-md5:	45d974c623b3bfbf9976f3d808fe1ee9
-Patch0:		%{name}-pyc.patch
+Source0:	http://www.djangoproject.com/m/releases/1.8/Django-%{version}.tar.gz
+# Source0-md5:	02426a28fb356e52006e053503d66490
 URL:		http://www.djangoproject.com/
 %if %{with python2}
-BuildRequires:	python-devel >= 1:2.6
+BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
@@ -47,7 +46,7 @@ Group:		Libraries/Python
 %pyrequires_eq	python3
 Requires:	python3-modules
 Suggests:	python3-devel-tools
-#Suggests:	python3-MySQLdb  # not available yet
+Suggests:	python3-MySQLdb
 Suggests:	python3-psycopg2
 
 %description -n python3-%{module}
@@ -74,7 +73,6 @@ Dokumentacja do Django.
 
 %prep
 %setup -q -n Django-%{version}
-%patch0 -p1
 
 %build
 %{__python} setup.py build
