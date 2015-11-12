@@ -19,7 +19,7 @@ BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
 BuildRequires:	python3-devel >= 1:3.3
-BuildRequires:	python3-distribute
+BuildRequires:	python3-setuptools
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sphinx-pdg
