@@ -6,12 +6,12 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.8.5
+Version:	1.8.6
 Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://www.djangoproject.com/m/releases/1.8/Django-%{version}.tar.gz
-# Source0-md5:	02426a28fb356e52006e053503d66490
+# Source0-md5:	12ba7b57a1f5268f6e8ba555628c0657
 URL:		http://www.djangoproject.com/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
