@@ -6,12 +6,12 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.8.6
+Version:	1.8.7
 Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://www.djangoproject.com/m/releases/1.8/Django-%{version}.tar.gz
-# Source0-md5:	12ba7b57a1f5268f6e8ba555628c0657
+# Source0-md5:	44c01355b5efa01938a89b8bd798b1ed
 URL:		http://www.djangoproject.com/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
@@ -22,6 +22,7 @@ BuildRequires:	python3-devel >= 1:3.3
 BuildRequires:	python3-setuptools
 %endif
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.710
 BuildRequires:	sphinx-pdg
 %pyrequires_eq	python
 Requires:	python-modules
@@ -75,24 +76,25 @@ Dokumentacja do Django.
 %setup -q -n Django-%{version}
 
 %build
-%{__python} setup.py build
+%if %{with python2}
+%py_build
+%endif
 %{__make} -C docs html
+%if %{with python3}
+%py3_build
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_docdir}
 
 %if %{with python2}
-%{__python} setup.py install \
-	--optimize 2 \
-	--root=$RPM_BUILD_ROOT
+%py_install
 cp $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
 %endif
 
 %if %{with python3}
-%{__python3} setup.py install \
-	--optimize 2 \
-	--root=$RPM_BUILD_ROOT
+%py3_install
 cp $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
 %if %{with python2}
 # default to python2 if built
