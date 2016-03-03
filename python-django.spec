@@ -7,7 +7,7 @@ Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
 Version:	1.8.7
-Release:	3
+Release:	4
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://www.djangoproject.com/m/releases/1.8/Django-%{version}.tar.gz
@@ -110,7 +110,6 @@ find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 
 # %%py_postclean (only for python2!)
-find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -name '*.py' -a -not -path '*_template*' | xargs rm
 find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
 %endif
 
