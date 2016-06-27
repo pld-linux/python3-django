@@ -111,8 +111,8 @@ find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.
 %endif
 
 %if %{with python3}
-%py3_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py3_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitescriptdir}
+%py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %endif
 
 ln -sf python-django-doc-%{version} $RPM_BUILD_ROOT%{_docdir}/python-django-doc
