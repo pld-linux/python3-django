@@ -6,12 +6,12 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.8.7
-Release:	4
+Version:	1.8.13
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://www.djangoproject.com/m/releases/1.8/Django-%{version}.tar.gz
-# Source0-md5:	44c01355b5efa01938a89b8bd798b1ed
+# Source0-md5:	a77e1ba9991f762de20bf03de57e39eb
 URL:		http://www.djangoproject.com/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
@@ -24,11 +24,9 @@ BuildRequires:	python3-setuptools
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.710
 BuildRequires:	sphinx-pdg
-%pyrequires_eq	python
-Requires:	python-modules
-Suggests:	python-devel-tools
 Suggests:	python-MySQLdb
 Suggests:	python-PyGreSQL
+Suggests:	python-devel-tools
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,10 +42,8 @@ wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Group:		Libraries/Python
-%pyrequires_eq	python3
-Requires:	python3-modules
-Suggests:	python3-devel-tools
 Suggests:	python3-MySQLdb
+Suggests:	python3-devel-tools
 Suggests:	python3-psycopg2
 
 %description -n python3-%{module}
