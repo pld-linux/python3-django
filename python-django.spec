@@ -86,15 +86,17 @@ install -d $RPM_BUILD_ROOT%{_docdir}
 
 %if %{with python2}
 %py_install
-cp $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
+mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
+# default to python2 if built
+ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 %endif
 
 %if %{with python3}
 %py3_install
-cp $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
-%if %{with python2}
+mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
+%if %{without python2}
 # default to python2 if built
-cp $RPM_BUILD_ROOT%{_bindir}/{py2-django-admin,django-admin.py}
+ln -sf py3-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 %endif
 %endif
 
@@ -123,7 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README.rst
-%attr(755,root,root) %{_bindir}/django-admin.py
+%attr(755,root,root) %{_bindir}/django-admin
 %attr(755,root,root) %{_bindir}/py2-django-admin
 %{py_sitescriptdir}/%{module}*
 %{py_sitescriptdir}/Django-*.egg-info
@@ -134,7 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.rst
 %if %{without python2}
-%attr(755,root,root) %{_bindir}/django-admin.py
+%attr(755,root,root) %{_bindir}/django-admin
 %endif
 %attr(755,root,root) %{_bindir}/py3-django-admin
 %{py3_sitescriptdir}/%{module}*
