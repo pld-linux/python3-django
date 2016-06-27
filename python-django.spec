@@ -91,8 +91,6 @@ rm -rf $RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
 
 mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
-# default to python2 if built
-ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 %endif
 
 %if %{with python3}
@@ -100,8 +98,17 @@ ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 find $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/conf/*_template -name __pycache__ | xargs rm -r
 
 mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
-%if %{without python2}
+%endif
+
+# setup "django-admin" global alias
+# this needs to be done after both Python versions are installed
+# otherwise file contents would be overwritten via symlink
+%if %{with python2}
 # default to python2 if built
+ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
+# default to python2 if built
+%else
+%if %{with python3}
 ln -sf py3-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 %endif
 %endif
