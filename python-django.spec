@@ -97,6 +97,8 @@ ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 
 %if %{with python3}
 %py3_install
+find $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/conf/*_template -name __pycache__ | xargs rm -r
+
 mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
 %if %{without python2}
 # default to python2 if built
