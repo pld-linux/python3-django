@@ -90,14 +90,16 @@ rm -rf $RPM_BUILD_ROOT
 %py_postclean
 find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
 
-mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
+mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-2}
+ln -s django-admin-2 $RPM_BUILD_ROOT%{_bindir}/py2-django-admin
 %endif
 
 %if %{with python3}
 %py3_install
 find $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/conf/*_template -name __pycache__ | xargs rm -r
 
-mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py3-django-admin}
+mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-3}
+ln -s django-admin-3 $RPM_BUILD_ROOT%{_bindir}/py3-django-admin
 %endif
 
 # setup "django-admin" global alias
@@ -125,6 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.rst
 %attr(755,root,root) %{_bindir}/django-admin
 %attr(755,root,root) %{_bindir}/py2-django-admin
+%attr(755,root,root) %{_bindir}/django-admin-2
 %{py_sitescriptdir}/%{module}*
 %{py_sitescriptdir}/Django-*.egg-info
 %endif
@@ -137,6 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/django-admin
 %endif
 %attr(755,root,root) %{_bindir}/py3-django-admin
+%attr(755,root,root) %{_bindir}/django-admin-3
 %{py3_sitescriptdir}/%{module}*
 %{py3_sitescriptdir}/Django-*.egg-info
 %endif
