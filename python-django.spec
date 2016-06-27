@@ -75,17 +75,21 @@ Dokumentacja do Django.
 %if %{with python2}
 %py_build
 %endif
+
 %{__make} -C docs html
+rm -r docs/_build/html/_sources
+
 %if %{with python3}
 %py3_build
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_docdir}
-
 %if %{with python2}
 %py_install
+%py_postclean
+find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
+
 mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,py2-django-admin}
 # default to python2 if built
 ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
@@ -100,23 +104,8 @@ ln -sf py3-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
 %endif
 %endif
 
-find $RPM_BUILD_ROOT -type f -name '*.py[co]' | xargs rm
-find $RPM_BUILD_ROOT -type f -exec sed -i -e "s#$RPM_BUILD_ROOT##g" "{}" ";"
-
-%if %{with python2}
-%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
-
-find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
-%endif
-
-%if %{with python3}
-%py3_ocomp $RPM_BUILD_ROOT%{py3_sitescriptdir}
-%py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}
-%endif
-
+install -d $RPM_BUILD_ROOT%{_docdir}
 ln -sf python-django-doc-%{version} $RPM_BUILD_ROOT%{_docdir}/python-django-doc
-rm -rf docs/_build/html/_sources
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -145,5 +134,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(644,root,root,755)
-%doc docs/_build/html
+%doc docs/_build/html/*
 %{_docdir}/python-django-doc
