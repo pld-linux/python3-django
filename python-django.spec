@@ -11,7 +11,7 @@ Name:		python-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
 Version:	1.11
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
@@ -180,6 +180,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/django-admin
 %attr(755,root,root) %{_bindir}/py2-django-admin
 %attr(755,root,root) %{_bindir}/django-admin-2
+%dir %{py_sitescriptdir}/%{module}
 %{py_sitescriptdir}/%{module}/*.py[co]
 %{py_sitescriptdir}/%{module}/apps
 %{py_sitescriptdir}/%{module}/bin
@@ -283,6 +284,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %attr(755,root,root) %{_bindir}/py3-django-admin
 %attr(755,root,root) %{_bindir}/django-admin-3
+%dir %{py3_sitescriptdir}/%{module}
 %{py3_sitescriptdir}/%{module}/*.py
 %{py3_sitescriptdir}/%{module}/__pycache__
 %{py3_sitescriptdir}/%{module}/apps
