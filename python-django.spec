@@ -1,3 +1,4 @@
+#
 # Conditional build:
 %bcond_without  python2 # CPython 2.x module
 %bcond_without  python3 # CPython 3.x module
@@ -6,19 +7,21 @@
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
-Version:	1.8.15
-Release:	2
+# stay on LTS line
+# https://www.djangoproject.com/download/#supported-versions
+Version:	1.11
+Release:	1
 License:	BSD
 Group:		Libraries/Python
-Source0:	http://www.djangoproject.com/m/releases/1.8/Django-%{version}.tar.gz
-# Source0-md5:	d24c3c5fc6d784296693659b05efa70f
-URL:		http://www.djangoproject.com/
+Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
+# Source0-md5:	5008d266f198c2fe761916139162a0c2
+URL:		https://www.djangoproject.com/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 1:3.3
+BuildRequires:	python3-devel >= 1:3.4
 BuildRequires:	python3-setuptools
 %endif
 BuildRequires:	rpm-pythonprov
@@ -88,7 +91,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %py_install
 %py_postclean
-find $RPM_BUILD_ROOT%{py_sitescriptdir} -type f -path '*_template*' -a -name '*.py[oc]' | xargs rm
 
 mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-2}
 ln -s django-admin-2 $RPM_BUILD_ROOT%{_bindir}/py2-django-admin
@@ -96,7 +98,6 @@ ln -s django-admin-2 $RPM_BUILD_ROOT%{_bindir}/py2-django-admin
 
 %if %{with python3}
 %py3_install
-find $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/conf/*_template -name __pycache__ | xargs rm -r
 
 mv $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-3}
 ln -s django-admin-3 $RPM_BUILD_ROOT%{_bindir}/py3-django-admin
