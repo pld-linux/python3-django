@@ -17,6 +17,10 @@ Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
 # Source0-md5:	5008d266f198c2fe761916139162a0c2
 URL:		https://www.djangoproject.com/
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(find_lang) >= 1.39
+BuildRequires:	rpmbuild(macros) >= 1.710
+BuildRequires:	sphinx-pdg
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-setuptools
@@ -25,9 +29,6 @@ BuildRequires:	python-setuptools
 BuildRequires:	python3-devel >= 1:3.4
 BuildRequires:	python3-setuptools
 %endif
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.710
-BuildRequires:	sphinx-pdg
 Suggests:	python-MySQLdb
 Suggests:	python-PyGreSQL
 Suggests:	python-devel-tools
