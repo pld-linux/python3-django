@@ -13,7 +13,7 @@ Name:		python-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
 Version:	1.11.13
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
