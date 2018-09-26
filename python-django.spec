@@ -12,12 +12,13 @@ Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
-Version:	1.11.13
-Release:	2
+Version:	1.11.15
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
-# Source0-md5:	ebdac613143ebdca911d5cef326fdc53
+# Source0-md5:	9c25bc2575a2cd357bcc5764f809d29d
+Patch0:		python3.7.patch
 URL:		https://www.djangoproject.com/
 %if %(locale -a | grep -q '^C\.utf8$'; echo $?)
 BuildRequires:	glibc-localedb-all
@@ -86,6 +87,8 @@ Dokumentacja do Django.
 
 %prep
 %setup -q -n Django-%{version}
+
+%patch0 -p1
 
 %build
 %if %{with python2}
