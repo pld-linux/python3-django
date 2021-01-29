@@ -1,0 +1,33 @@
+BuildEnvironment.note_versionchange was deprecated in 1.8.0, removed in 2.x
+HTMLTranslator.highlightlang and .highlightlinenothreshold as well
+--- Django-1.11.29/docs/_ext/djangodocs.py.orig	2020-03-04 09:46:40.000000000 +0100
++++ Django-1.11.29/docs/_ext/djangodocs.py	2021-01-29 20:23:42.880898935 +0100
+@@ -4,6 +4,7 @@
+ import json
+ import os
+ import re
++import sys
+ 
+ from docutils import nodes
+ from docutils.parsers.rst import Directive, directives
+@@ -98,8 +99,8 @@
+     """
+     HTML document generator visit handler
+     """
+-    lang = self.highlightlang
+-    linenos = node.rawsource.count('\n') >= self.highlightlinenothreshold - 1
++    lang = self.builder.config.highlight_language
++    linenos = node.rawsource.count('\n') >= sys.maxsize - 1
+     fname = node['filename']
+     highlight_args = node.get('highlight_args', {})
+     if 'language' in node:
+@@ -227,7 +228,8 @@
+         node['type'] = self.name
+         if self.content:
+             self.state.nested_parse(self.content, self.content_offset, node)
+-        env.note_versionchange(node['type'], node['version'], node, self.lineno)
++        node.line = self.lineno
++        env.get_domain('changeset').note_changeset(node)
+         return ret
+ 
+ 

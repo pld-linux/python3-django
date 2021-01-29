@@ -3,7 +3,7 @@
 %bcond_without	doc	# Sphinx documentation
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
-%bcond_with	tests	# unit tests [some fail randomly as of 1.11.x]
+%bcond_with	tests	# unit tests [failing: 1E, 1F as of 1.11.29]
 
 %define		module		django
 %define		egg_name	Django
@@ -12,13 +12,14 @@ Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
-Version:	1.11.15
-Release:	2
+# keep 1.11.x here for python2 support
+Version:	1.11.29
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
-# Source0-md5:	9c25bc2575a2cd357bcc5764f809d29d
-Patch0:		python3.7.patch
+# Source0-md5:	e725953dfc63ea9e3b5b0898a8027bd7
+Patch0:		%{name}-sphinx.patch
 URL:		https://www.djangoproject.com/
 %if %(locale -a | grep -q '^C\.utf8$'; echo $?)
 BuildRequires:	glibc-localedb-all
@@ -40,6 +41,9 @@ BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-pytz
 %endif
+%endif
+%if %{with doc}
+BuildRequires:	sphinx-pdg >= 1.8
 %endif
 Suggests:	python-MySQLdb
 Suggests:	python-PyGreSQL
@@ -87,7 +91,6 @@ Dokumentacja do Django.
 
 %prep
 %setup -q -n Django-%{version}
-
 %patch0 -p1
 
 %build
@@ -97,7 +100,7 @@ Dokumentacja do Django.
 %if %{with tests}
 LC_ALL=C.UTF-8 \
 PYTHONPATH=$(pwd)/build-2/lib \
-%{__python} tests/runtests.py
+%{__python} tests/runtests.py --parallel 1
 %endif
 %endif
 
@@ -107,23 +110,25 @@ PYTHONPATH=$(pwd)/build-2/lib \
 %if %{with tests}
 LC_ALL=C.UTF-8 \
 PYTHONPATH=$(pwd)/build-3/lib \
-%{__python3} tests/runtests.py
+%{__python3} tests/runtests.py --parallel 1
 %endif
 %endif
 
 %if %{with doc}
 %{__make} -C docs html
-%{__rm} -r docs/_build/html/_sources
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %if %{with python2}
 %py_install
 %py_postclean
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-2}
 ln -s django-admin-2 $RPM_BUILD_ROOT%{_bindir}/py2-django-admin
+
+%{__sed} -i -e '1s,/usr/bin/env python$,%{__python},' $RPM_BUILD_ROOT%{py_sitescriptdir}/django/conf/project_template/manage.py-tpl
 %endif
 
 %if %{with python3}
@@ -131,6 +136,9 @@ ln -s django-admin-2 $RPM_BUILD_ROOT%{_bindir}/py2-django-admin
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-3}
 ln -s django-admin-3 $RPM_BUILD_ROOT%{_bindir}/py3-django-admin
+
+%{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/conf/project_template/manage.py-tpl
+%{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/bin/django-admin.py
 %endif
 
 # setup "django-admin" global alias
@@ -139,7 +147,6 @@ ln -s django-admin-3 $RPM_BUILD_ROOT%{_bindir}/py3-django-admin
 %if %{with python2}
 # default to python2 if built
 ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
-# default to python2 if built
 %else
 %if %{with python3}
 ln -sf py3-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
@@ -433,6 +440,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %files doc
 %defattr(644,root,root,755)
-%doc docs/_build/html/*
+%doc docs/_build/html/{_downloads,_images,_modules,_static,faq,howto,internals,intro,misc,ref,releases,topics,*.html,*.js}
 %{_docdir}/python-django-doc
 %endif
