@@ -1,25 +1,21 @@
 #
 # Conditional build:
 %bcond_without	doc	# Sphinx documentation
-%bcond_without	python2 # CPython 2.x module
-%bcond_without	python3 # CPython 3.x module
-%bcond_with	tests	# unit tests [failing: 1E, 1F as of 1.11.29]
+%bcond_with	tests	# unit tests [1 failure as of 2.2.17]
 
 %define		module		django
 %define		egg_name	Django
 Summary:	The web framework for perfectionists with deadlines
 Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
-Name:		python-%{module}
+Name:		python3-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
-# keep 1.11.x here for python2 support
-Version:	1.11.29
+Version:	2.2.17
 Release:	1
 License:	BSD
 Group:		Libraries/Python
-Source0:	https://www.djangoproject.com/m/releases/1.11/Django-%{version}.tar.gz
-# Source0-md5:	e725953dfc63ea9e3b5b0898a8027bd7
-Patch0:		%{name}-sphinx.patch
+Source0:	https://www.djangoproject.com/m/releases/2.2/Django-%{version}.tar.gz
+# Source0-md5:	832805a3fdf817d4546609df1ed2a174
 URL:		https://www.djangoproject.com/
 %if %(locale -a | grep -q '^C\.utf8$'; echo $?)
 BuildRequires:	glibc-localedb-all
@@ -28,26 +24,20 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.40
 BuildRequires:	rpmbuild(macros) >= 1.714
 %{?with_doc:BuildRequires:	sphinx-pdg}
-%if %{with python2}
-BuildRequires:	python-devel >= 1:2.7
-BuildRequires:	python-setuptools
-%if %{with tests}
-BuildRequires:	python-pytz
-%endif
-%endif
-%if %{with python3}
-BuildRequires:	python3-devel >= 1:3.4
+BuildRequires:	python3-devel >= 1:3.5
 BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-pytz
-%endif
+BuildRequires:	python3-selenium
+BuildRequires:	python3-sqlparse >= 0.2.2
 %endif
 %if %{with doc}
-BuildRequires:	sphinx-pdg >= 1.8
+BuildRequires:	sphinx-pdg >= 1.6.0
 %endif
-Suggests:	python-MySQLdb
-Suggests:	python-PyGreSQL
-Suggests:	python-devel-tools
+Suggests:	python3-MySQLdb
+Suggests:	python3-PyGreSQL
+Suggests:	python3-devel-tools
+Conflicts:	python-django < 1.11.29
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -56,22 +46,6 @@ Django is a high-level Python Web framework that encourages rapid
 development and clean, pragmatic design.
 
 %description -l pl.UTF-8
-Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
-wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
-
-%package -n python3-%{module}
-Summary:	The web framework for perfectionists with deadlines
-Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
-Group:		Libraries/Python
-Suggests:	python3-MySQLdb
-Suggests:	python3-devel-tools
-Suggests:	python3-psycopg2
-
-%description -n python3-%{module}
-Django is a high-level Python Web framework that encourages rapid
-development and clean, pragmatic design.
-
-%description -n python3-%{module} -l pl.UTF-8
 Django to wysokopoziomowy szkielet dla serwisów WWW w Pythonie
 wspierający szybkie tworzenie i czysty, pragmatyczny projekt.
 
@@ -91,27 +65,14 @@ Dokumentacja do Django.
 
 %prep
 %setup -q -n Django-%{version}
-%patch0 -p1
 
 %build
-%if %{with python2}
-%py_build
-
-%if %{with tests}
-LC_ALL=C.UTF-8 \
-PYTHONPATH=$(pwd)/build-2/lib \
-%{__python} tests/runtests.py --parallel 1
-%endif
-%endif
-
-%if %{with python3}
 %py3_build
 
 %if %{with tests}
 LC_ALL=C.UTF-8 \
-PYTHONPATH=$(pwd)/build-3/lib \
+PYTHONPATH=$(pwd)/build-3/lib:$(pwd) \
 %{__python3} tests/runtests.py --parallel 1
-%endif
 %endif
 
 %if %{with doc}
@@ -121,17 +82,6 @@ PYTHONPATH=$(pwd)/build-3/lib \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%if %{with python2}
-%py_install
-%py_postclean
-
-%{__mv} $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-2}
-ln -s django-admin-2 $RPM_BUILD_ROOT%{_bindir}/py2-django-admin
-
-%{__sed} -i -e '1s,/usr/bin/env python$,%{__python},' $RPM_BUILD_ROOT%{py_sitescriptdir}/django/conf/project_template/manage.py-tpl
-%endif
-
-%if %{with python3}
 %py3_install
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/{django-admin.py,django-admin-3}
@@ -139,19 +89,9 @@ ln -s django-admin-3 $RPM_BUILD_ROOT%{_bindir}/py3-django-admin
 
 %{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/conf/project_template/manage.py-tpl
 %{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/bin/django-admin.py
-%endif
 
 # setup "django-admin" global alias
-# this needs to be done after both Python versions are installed
-# otherwise file contents would be overwritten via symlink
-%if %{with python2}
-# default to python2 if built
-ln -sf py2-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
-%else
-%if %{with python3}
 ln -sf py3-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
-%endif
-%endif
 
 %if %{with doc}
 install -d $RPM_BUILD_ROOT%{_docdir}
@@ -171,143 +111,15 @@ find \
 # - remove __pycache__ "language"
 # - drop charsets from lang names (django uses non-standard _Charset instead of @charset)
 grep -v __pycache__ <django.lang | \
-	sed -e 's/lang(sr_Latn)/lang(sr)/;s/lang(zh_Hans)/lang(zh_CN)/;s/lang(zh_Hant)/lang(zh_TW)/' > django_fixed.lang
-
-# separate lang to Python 2 and Python 3 files
-%if %{with python2}
-grep python2 django_fixed.lang > python2-django.lang
-%endif
-%if %{with python3}
-grep python3 django_fixed.lang > python3-django.lang
-%endif
+	sed -e 's/lang(sr_Latn)/lang(sr)/;s/lang(zh_Hans)/lang(zh_CN)/;s/lang(zh_Hant)/lang(zh_TW)/' > %{name}.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%if %{with python2}
-%files -f python2-django.lang
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS LICENSE README.rst
 %attr(755,root,root) %{_bindir}/django-admin
-%attr(755,root,root) %{_bindir}/py2-django-admin
-%attr(755,root,root) %{_bindir}/django-admin-2
-%dir %{py_sitescriptdir}/%{module}
-%{py_sitescriptdir}/%{module}/*.py[co]
-%{py_sitescriptdir}/%{module}/apps
-%{py_sitescriptdir}/%{module}/bin
-%{py_sitescriptdir}/%{module}/core
-%{py_sitescriptdir}/%{module}/db
-%{py_sitescriptdir}/%{module}/dispatch
-%{py_sitescriptdir}/%{module}/forms
-%{py_sitescriptdir}/%{module}/http
-%{py_sitescriptdir}/%{module}/middleware
-%{py_sitescriptdir}/%{module}/template
-%{py_sitescriptdir}/%{module}/templatetags
-%{py_sitescriptdir}/%{module}/test
-%{py_sitescriptdir}/%{module}/urls
-%{py_sitescriptdir}/%{module}/utils
-%{py_sitescriptdir}/%{module}/views
-
-%dir %{py_sitescriptdir}/%{module}/conf
-%{py_sitescriptdir}/%{module}/conf/*.py[co]
-%{py_sitescriptdir}/%{module}/conf/app_template
-%dir %{py_sitescriptdir}/%{module}/conf/locale
-%{py_sitescriptdir}/%{module}/conf/locale/__init__.py[co]
-%{py_sitescriptdir}/%{module}/conf/project_template
-%{py_sitescriptdir}/%{module}/conf/urls
-
-%dir %{py_sitescriptdir}/%{module}/contrib
-%{py_sitescriptdir}/%{module}/contrib/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/admin
-%{py_sitescriptdir}/%{module}/contrib/admin/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/admin/locale
-%{py_sitescriptdir}/%{module}/contrib/admin/migrations
-%{py_sitescriptdir}/%{module}/contrib/admin/static
-%{py_sitescriptdir}/%{module}/contrib/admin/templates
-%{py_sitescriptdir}/%{module}/contrib/admin/templatetags
-%{py_sitescriptdir}/%{module}/contrib/admin/views
-%dir %{py_sitescriptdir}/%{module}/contrib/admindocs
-%{py_sitescriptdir}/%{module}/contrib/admindocs/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/admindocs/locale
-%{py_sitescriptdir}/%{module}/contrib/admindocs/templates
-%dir %{py_sitescriptdir}/%{module}/contrib/auth
-%{py_sitescriptdir}/%{module}/contrib/auth/*.py[co]
-%{py_sitescriptdir}/%{module}/contrib/auth/common-passwords.txt.gz
-%{py_sitescriptdir}/%{module}/contrib/auth/handlers
-%dir %{py_sitescriptdir}/%{module}/contrib/auth/locale
-%{py_sitescriptdir}/%{module}/contrib/auth/management
-%{py_sitescriptdir}/%{module}/contrib/auth/migrations
-%{py_sitescriptdir}/%{module}/contrib/auth/templates
-%{py_sitescriptdir}/%{module}/contrib/auth/tests
-%dir %{py_sitescriptdir}/%{module}/contrib/contenttypes
-%{py_sitescriptdir}/%{module}/contrib/contenttypes/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/contenttypes/locale
-%{py_sitescriptdir}/%{module}/contrib/contenttypes/management
-%{py_sitescriptdir}/%{module}/contrib/contenttypes/migrations
-%dir %{py_sitescriptdir}/%{module}/contrib/flatpages
-%{py_sitescriptdir}/%{module}/contrib/flatpages/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/flatpages/locale
-%{py_sitescriptdir}/%{module}/contrib/flatpages/migrations
-%{py_sitescriptdir}/%{module}/contrib/flatpages/templatetags
-%dir %{py_sitescriptdir}/%{module}/contrib/gis
-%{py_sitescriptdir}/%{module}/contrib/gis/*.py[co]
-%{py_sitescriptdir}/%{module}/contrib/gis/admin
-%{py_sitescriptdir}/%{module}/contrib/gis/db
-%{py_sitescriptdir}/%{module}/contrib/gis/forms
-%{py_sitescriptdir}/%{module}/contrib/gis/gdal
-%{py_sitescriptdir}/%{module}/contrib/gis/geoip
-%{py_sitescriptdir}/%{module}/contrib/gis/geoip2
-%{py_sitescriptdir}/%{module}/contrib/gis/geometry
-%{py_sitescriptdir}/%{module}/contrib/gis/geos
-%dir %{py_sitescriptdir}/%{module}/contrib/gis/locale
-%{py_sitescriptdir}/%{module}/contrib/gis/management
-%{py_sitescriptdir}/%{module}/contrib/gis/serializers
-%{py_sitescriptdir}/%{module}/contrib/gis/sitemaps
-%{py_sitescriptdir}/%{module}/contrib/gis/static
-%{py_sitescriptdir}/%{module}/contrib/gis/templates
-%{py_sitescriptdir}/%{module}/contrib/gis/utils
-%dir %{py_sitescriptdir}/%{module}/contrib/humanize
-%{py_sitescriptdir}/%{module}/contrib/humanize/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/humanize/locale
-%{py_sitescriptdir}/%{module}/contrib/humanize/templatetags
-%dir %{py_sitescriptdir}/%{module}/contrib/messages
-%{py_sitescriptdir}/%{module}/contrib/messages/*.py[co]
-%{py_sitescriptdir}/%{module}/contrib/messages/storage
-%dir %{py_sitescriptdir}/%{module}/contrib/postgres
-%{py_sitescriptdir}/%{module}/contrib/postgres/*.py[co]
-%{py_sitescriptdir}/%{module}/contrib/postgres/aggregates
-%{py_sitescriptdir}/%{module}/contrib/postgres/fields
-%{py_sitescriptdir}/%{module}/contrib/postgres/forms
-%{py_sitescriptdir}/%{module}/contrib/postgres/jinja2
-%dir %{py_sitescriptdir}/%{module}/contrib/postgres/locale
-%{py_sitescriptdir}/%{module}/contrib/postgres/templates
-%dir %{py_sitescriptdir}/%{module}/contrib/redirects
-%{py_sitescriptdir}/%{module}/contrib/redirects/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/redirects/locale
-%{py_sitescriptdir}/%{module}/contrib/redirects/migrations
-%dir %{py_sitescriptdir}/%{module}/contrib/sessions
-%{py_sitescriptdir}/%{module}/contrib/sessions/*.py[co]
-%{py_sitescriptdir}/%{module}/contrib/sessions/backends
-%dir %{py_sitescriptdir}/%{module}/contrib/sessions/locale
-%{py_sitescriptdir}/%{module}/contrib/sessions/management
-%{py_sitescriptdir}/%{module}/contrib/sessions/migrations
-%{py_sitescriptdir}/%{module}/contrib/sitemaps
-%dir %{py_sitescriptdir}/%{module}/contrib/sites
-%{py_sitescriptdir}/%{module}/contrib/sites/*.py[co]
-%dir %{py_sitescriptdir}/%{module}/contrib/sites/locale
-%{py_sitescriptdir}/%{module}/contrib/sites/migrations
-%{py_sitescriptdir}/%{module}/contrib/staticfiles
-%{py_sitescriptdir}/%{module}/contrib/syndication
-%{py_sitescriptdir}/%{egg_name}-%{version}-py*.egg-info
-%endif
-
-%if %{with python3}
-%files -n python3-%{module} -f python3-django.lang
-%defattr(644,root,root,755)
-%doc AUTHORS LICENSE README.rst
-%if %{without python2}
-%attr(755,root,root) %{_bindir}/django-admin
-%endif
 %attr(755,root,root) %{_bindir}/py3-django-admin
 %attr(755,root,root) %{_bindir}/django-admin-3
 %dir %{py3_sitescriptdir}/%{module}
@@ -364,7 +176,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitescriptdir}/%{module}/contrib/auth/management
 %{py3_sitescriptdir}/%{module}/contrib/auth/migrations
 %{py3_sitescriptdir}/%{module}/contrib/auth/templates
-%{py3_sitescriptdir}/%{module}/contrib/auth/tests
 %dir %{py3_sitescriptdir}/%{module}/contrib/contenttypes
 %{py3_sitescriptdir}/%{module}/contrib/contenttypes/*.py
 %{py3_sitescriptdir}/%{module}/contrib/contenttypes/__pycache__
@@ -384,9 +195,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitescriptdir}/%{module}/contrib/gis/db
 %{py3_sitescriptdir}/%{module}/contrib/gis/forms
 %{py3_sitescriptdir}/%{module}/contrib/gis/gdal
-%{py3_sitescriptdir}/%{module}/contrib/gis/geoip
 %{py3_sitescriptdir}/%{module}/contrib/gis/geoip2
-%{py3_sitescriptdir}/%{module}/contrib/gis/geometry
 %{py3_sitescriptdir}/%{module}/contrib/gis/geos
 %dir %{py3_sitescriptdir}/%{module}/contrib/gis/locale
 %{py3_sitescriptdir}/%{module}/contrib/gis/management
@@ -435,11 +244,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitescriptdir}/%{module}/contrib/syndication
 
 %{py3_sitescriptdir}/%{egg_name}-%{version}-py*.egg-info
-%endif
 
 %if %{with doc}
 %files doc
 %defattr(644,root,root,755)
-%doc docs/_build/html/{_downloads,_images,_modules,_static,faq,howto,internals,intro,misc,ref,releases,topics,*.html,*.js}
+%doc docs/_build/html/{_images,_modules,_static,faq,howto,internals,intro,misc,ref,releases,topics,*.html,*.js}
 %{_docdir}/python-django-doc
 %endif
