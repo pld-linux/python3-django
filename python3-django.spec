@@ -11,7 +11,7 @@ Name:		python3-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
 Version:	2.2.17
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/2.2/Django-%{version}.tar.gz
