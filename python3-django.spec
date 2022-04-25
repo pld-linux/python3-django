@@ -10,12 +10,12 @@ Summary(pl.UTF-8):	Szkielet WWW dla perfekcjonistów z ograniczeniami czasowymi
 Name:		python3-%{module}
 # stay on LTS line
 # https://www.djangoproject.com/download/#supported-versions
-Version:	2.2.17
-Release:	4
+Version:	2.2.28
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://www.djangoproject.com/m/releases/2.2/Django-%{version}.tar.gz
-# Source0-md5:	832805a3fdf817d4546609df1ed2a174
+# Source0-md5:	62550f105ef66ac7d08e0126f457578a
 URL:		https://www.djangoproject.com/
 %if %(locale -a | grep -q '^C\.utf8$'; echo $?)
 BuildRequires:	glibc-localedb-all
@@ -91,7 +91,7 @@ ln -s django-admin-3 $RPM_BUILD_ROOT%{_bindir}/py3-django-admin
 %{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{py3_sitescriptdir}/django/bin/django-admin.py
 
 # setup "django-admin" global alias
-ln -sf py3-django-admin $RPM_BUILD_ROOT%{_bindir}/django-admin
+ln -sf django-admin-3 $RPM_BUILD_ROOT%{_bindir}/django-admin
 
 %if %{with doc}
 install -d $RPM_BUILD_ROOT%{_docdir}
